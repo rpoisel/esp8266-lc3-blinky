@@ -1,0 +1,31 @@
+PROGRAM MQTTSample
+
+	VAR
+		init : BOOL := TRUE;
+
+		button : R_TRIG;
+		blink_cycles : SINT := 6;
+		blink_count : SINT;
+	END_VAR
+
+	VAR
+		pin_relay : USINT := 5;
+		pin_button : USINT := 0;
+	END_VAR
+
+	IF init THEN
+		pinMode(pin_relay, TRUE);
+		pinMode(pin_button, FALSE);
+
+		init := FALSE;
+	END_IF;
+
+	button(CLK := digitalRead(pin_button));
+	IF button.Q THEN
+		blink_count := blink_cycles;
+	END_IF;
+	IF blink_count > 0 THEN
+		digitalWrite(pin_relay, MOD(blink_count, 2) = 0);
+		blink_count := blink_count - 1;
+	END_IF;
+END_PROGRAM
